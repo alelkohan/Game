@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilih Mode - Kuis Matematika</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-image: url('DALL·E 2024-09-30 11.22.17 - A cheerful virtual classroom background for a web-based math game. The walls are painted in pastel colors like light blue and yellow. On the top, a la.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh; /* Mengatur tinggi halaman */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Transparansi */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 800px; /* Lebar maksimal kontainer */
+            margin-top: 100px; /* Jarak dari atas */
+        }
+
+        .btn-lg {
+            width: 100%; /* Membuat tombol memenuhi lebar kontainer */
+            margin-bottom: 15px; /* Jarak antar tombol */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1 class="mb-4">Selamat Datang di Kuis Matematika!</h1>
+        <p class="lead">Pilih mode operasi matematika di bawah ini untuk memulai.</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-3 mb-3">
+                <button id="penjumlahan-btn" class="btn btn-primary btn-lg btn-block">Penjumlahan</button>
+                <p id="penjumlahan-status"></p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <button id="pengurangan-btn" class="btn btn-danger btn-lg btn-block">Pengurangan</button>
+                <p id="pengurangan-status"></p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <button id="perkalian-btn" class="btn btn-success btn-lg btn-block">Perkalian</button>
+                <p id="perkalian-status"></p>
+            </div>
+            <div class="col-md-3 mb-3">
+                <button id="pembagian-btn" class="btn btn-warning btn-lg btn-block">Pembagian</button>
+                <p id="pembagian-status"></p>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+            <p>Skor terakhir: <span id="last-score">0</span></p>
+            <p style="margin-left: 10px;">Total Skor: <span id="total-score">0</span></p>
+        </div>
+
+        <!-- Tambahkan tombol reset -->
+        <button class="btn btn-danger mt-3" onclick="resetGame()">Reset Semua Data</button>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" id="startGameModal" tabindex="-1" aria-labelledby="startGameModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Mulai Game</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin memulai mode <span id="mode-name"></span>?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="button" class="btn btn-primary" id="confirm-start-btn">Mulai Game</button>
+            </div>
+          </div>
+        </div>
+    </div>
+      
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Saat halaman utama dimuat, periksa mode yang sudah selesai dan skor terakhir
+        window.onload = function() {
+            const lastScore = localStorage.getItem("lastScore") || 0;
+            document.getElementById("last-score").textContent = lastScore;
+
+            const totalScore = localStorage.getItem("totalScore") || 0;
+            document.getElementById("total-score").textContent = totalScore; // Tampilkan total skor
+
+            const completedModes = JSON.parse(localStorage.getItem("completedModes")) || {};
+
+            // Cek setiap mode apakah sudah selesai
+            if (completedModes.penjumlahan) {
+                document.getElementById("penjumlahan-status").textContent = "Sudah Selesai!";
+                document.getElementById("penjumlahan-btn").classList.add("disabled");
+            }
+
+            if (completedModes.pengurangan) {
+                document.getElementById("pengurangan-status").textContent = "Sudah Selesai!";
+                document.getElementById("pengurangan-btn").classList.add("disabled");
+            }
+
+            if (completedModes.perkalian) {
+                document.getElementById("perkalian-status").textContent = "Sudah Selesai!";
+                document.getElementById("perkalian-btn").classList.add("disabled");
+            }
+
+            if (completedModes.pembagian) {
+                document.getElementById("pembagian-status").textContent = "Sudah Selesai!";
+                document.getElementById("pembagian-btn").classList.add("disabled");
+            }
+        }
+
+        // Fungsi reset untuk menghapus semua data di localStorage
+        function resetGame() {
+            if (confirm("Apakah Anda yakin ingin mereset semua data?")) {
+                localStorage.clear();  // Menghapus semua data di localStorage
+                location.reload();  // Muat ulang halaman untuk mengatur ulang status
+            }
+        }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let selectedMode = ""; // Untuk menyimpan mode yang dipilih
+
+        // Menangkap tombol-tombol mode
+        const penjumlahanBtn = document.getElementById("penjumlahan-btn");
+        const penguranganBtn = document.getElementById("pengurangan-btn");
+        const perkalianBtn = document.getElementById("perkalian-btn");
+        const pembagianBtn = document.getElementById("pembagian-btn");
+
+        // Menangkap elemen-elemen modal
+        const modal = new bootstrap.Modal(document.getElementById("startGameModal"));
+        const modeNameSpan = document.getElementById("mode-name");
+        const confirmStartBtn = document.getElementById("confirm-start-btn");
+
+        // Fungsi untuk menampilkan modal konfirmasi
+        function showModal(mode) {
+            selectedMode = mode; // Simpan mode yang dipilih
+            modeNameSpan.textContent = mode; // Tampilkan mode di dalam modal
+            modal.show(); // Tampilkan modal
+        }
+
+        // Tambahkan event listener ke setiap tombol
+        penjumlahanBtn.addEventListener("click", function() {
+            if (this.classList.contains("disabled")) return; // Cek apakah tombol dinonaktifkan
+            showModal("penjumlahan");
+        });
+
+        penguranganBtn.addEventListener("click", function() {
+            if (this.classList.contains("disabled")) return; // Cek apakah tombol dinonaktifkan
+            showModal("pengurangan");
+        });
+
+        perkalianBtn.addEventListener("click", function() {
+            if (this.classList.contains("disabled")) return; // Cek apakah tombol dinonaktifkan
+            showModal("perkalian");
+        });
+
+        pembagianBtn.addEventListener("click", function() {
+            if (this.classList.contains("disabled")) return; // Cek apakah tombol dinonaktifkan
+            showModal("pembagian");
+        });
+
+        // Event listener untuk tombol konfirmasi di dalam modal
+        confirmStartBtn.addEventListener("click", function() {
+            if (selectedMode) {
+                window.location.href = `game.html?mode=${selectedMode}`; // Redirect ke halaman game dengan mode yang dipilih
+            }
+        });
+    });
+
+    </script>
+</body>
+</html>

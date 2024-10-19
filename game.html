@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Matematika</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url('DALL·E 2024-09-30 11.29.21 - A focused yet connected background for a math game problem-solving interface. The design remains linked to the previous cheerful classroom setting but.webp'); /* Ganti dengan path gambar yang sesuai */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.6); /* Transparansi untuk membedakan konten */
+            padding: 50px;
+            border-radius: 33px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            width: 480px; /* Sesuaikan lebar dengan kotak biru */
+            height: 480px; /* Sesuaikan tinggi dengan kotak biru */
+            text-align: center;
+            position: relative;
+            left: 14px; /* Pindahkan container ke kiri */
+            top: 9px;
+        }
+
+        h1, p, input, button {
+            color: #fff;
+        }
+
+        #answer {
+            background-color: rgba(255, 255, 255, 0.8); /* Transparansi pada input */
+            color: #000; /* Warna teks input hitam */
+        }
+        
+        #time-display {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #back-display {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            z-index: 1000; /* Agar tombol selalu berada di atas elemen lain */
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* #back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        } */
+
+    </style>
+</head>
+<body>
+
+    <div id="time-display">
+        Waktu: <span id="timer">00:00</span>
+    </div>
+    <div id="back-display">
+        <a href="index.html" id="back-button"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#FFFFFF" class="bi bi-house-fill" viewBox="0 0 16 16">
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+            <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
+          </svg>
+        </a>
+    </div>
+
+    <div class="container text-center">
+        <h1 id="mode-title">Mode: </h1>
+        <p id="level">Level: 1</p>
+        <p id="question">Berapa hasil dari: </p>
+        <input type="number" id="answer" class="form-control w-50 mx-auto mb-3" placeholder="Masukkan jawaban">
+        <button onclick="checkAnswer()" class="btn btn-primary">Cek Jawaban</button>
+        <button onclick="showAnswer()" class="btn btn-warning">Temukan Jawaban</button> <!-- Tombol untuk menampilkan jawaban -->
+        <p id="feedback" class="mt-3"></p>
+        <p>Skor Anda: <span id="score">0</span></p>
+    </div>
+
+    <div class="modal fade" id="backConfirmModal" tabindex="-1" aria-labelledby="backConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="backConfirmModalLabel">Konfirmasi Kembali</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin kembali? Waktu akan tersimpan dan soal akan diganti.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="confirm-back-btn">Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("back-button").addEventListener("click", function(event) {
+            event.preventDefault(); // Mencegah aksi default link
+            $('#backConfirmModal').modal('show'); // Tampilkan modal konfirmasi
+        });
+
+        // Event listener untuk tombol konfirmasi di dalam modal
+        document.getElementById("confirm-back-btn").addEventListener("click", function() {
+            // Jika pengguna mengonfirmasi, arahkan ke index.html
+            window.location.href = "index.html"; 
+        });
+    </script>
+</body>
+</html>
